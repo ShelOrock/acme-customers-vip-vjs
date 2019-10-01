@@ -5,11 +5,15 @@ const vipInput = document.querySelector('input[type=checkbox]');
 const errorMessage = document.querySelectorAll('.error');
 const button = document.querySelector('.btn')
 
-let newCustomer = {};
-let vipArray = [];
-
 formInput.addEventListener('keyup', ev => {
     console.log(errorMessage);
+
+    let newCustomer = {
+        name: nameInput.value,
+        email: emailInput.value,
+        isVip: vipInput.checked
+    };
+
     if(!ev.target.value) {
         errorMessage[0].innerHTML = 'name required'
         errorMessage[1].innerHTML = 'email required'
@@ -18,25 +22,28 @@ formInput.addEventListener('keyup', ev => {
         errorMessage[1].innerHTML = ''
     }
     ev.preventDefault();
-    console.log(nameInput.value);
-    let newCustomer = {
-        name: nameInput.value,
-        email: emailInput.value,
-        isVip: vipInput.checked
-    };
-    
-    console.log(newCustomer);
 })
 
+button.addEventListener('submit', ev => {
+    render(nameList);
 
-
-
-button.addEventListener('submit', ev =>{
     ev.preventDefault();
+})
+
+const render = (container) => {
+    const html = `<div class='item'><p>${newCustomer.name} ${newCustomer.email}</p></div>`
+    container.innerHTML = html;
+}
+
+
+
+
+// button.addEventListener('submit', ev =>{
+//     ev.preventDefault();
     
 
-    vipArray.push()
+//     vipArray.push()
     
 
-    console.log(newCustomer);
-} )
+//     console.log(newCustomer);
+// } )

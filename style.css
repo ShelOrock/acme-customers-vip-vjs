@@ -30,3 +30,8 @@ input {
     height: auto;
     margin-top: 1rem;
 }
+
+.is-vip {
+    background-color: dodgerblue;
+    color: white;
+}

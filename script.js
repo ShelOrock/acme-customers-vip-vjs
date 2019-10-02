@@ -1,49 +1,61 @@
-const formInput = document.querySelector('form');
-const nameInput = document.querySelector('input[name=name]');
-const emailInput = document.querySelector('input[name=email]');
-const vipInput = document.querySelector('input[type=checkbox]');
-const errorMessage = document.querySelectorAll('.error');
-const button = document.querySelector('.btn')
+const form = document.querySelector('form');
+const error = document.querySelector('.errorField');
+const nameContainer = document.querySelector('.name-container');
+const checkVip = document.querySelectorAll('input')[2];
 
-formInput.addEventListener('keyup', ev => {
-    console.log(errorMessage);
+const formData = {};
+const submittedNames = [];
 
-    let newCustomer = {
-        name: nameInput.value,
-        email: emailInput.value,
-        isVip: vipInput.checked
-    };
+const computeData = ev => {
+    const {target: {name, value}} = ev
 
-    if(!ev.target.value) {
-        errorMessage[0].innerHTML = 'name required'
-        errorMessage[1].innerHTML = 'email required'
-    } else {
-        errorMessage[0].innerHTML = ''
-        errorMessage[1].innerHTML = ''
+    if([name]) {
+        formData[name] = value;
     }
-    ev.preventDefault();
-})
 
-button.addEventListener('submit', ev => {
-    render(nameList);
-
-    ev.preventDefault();
-})
-
-const render = (container) => {
-    const html = `<div class='item'><p>${newCustomer.name} ${newCustomer.email}</p></div>`
-    container.innerHTML = html;
 }
 
+const validate = () => {
+    const missingFields = Object
+        .entries(formData)
+        .reduce((missing, [key, value]) => {
+            if(!value) {
+                return missing.concat(key);
+            }
+            return missing;
+        }, []);
 
+    if(missingFields.length) {
+        const errorMessage = missingFields.map(missing => {
+            return `${missing} required<br>`
+        }).join('');
+        error.innerHTML = errorMessage;
+    } else {
+        error.innerHTML = '';
+    }
+}
 
+const onKeyUp = ev => {
+    computeData(ev);
+    validate();
+}
 
-// button.addEventListener('submit', ev =>{
-//     ev.preventDefault();
-    
+const render = (submittedNames, nameContainer) => {
+    const html = submittedNames.map(name => {
+        return `<div class='name${name.isVip ? ' is-vip' : ' '}'>${name.name} (${name.email})<button class='destroy-btn'>Destroy</button></div>`
+    }).join('');
+    nameContainer.innerHTML = html;
+}
 
-//     vipArray.push()
-    
+checkVip.addEventListener('change', ev => {
+    formData.isVip = ev.target.checked;
+})
 
-//     console.log(newCustomer);
-// } )
+form.addEventListener('keyup', onKeyUp)
+
+form.addEventListener('submit', ev => {
+    submittedNames.push(formData)
+    ev.preventDefault();
+    render(submittedNames, nameContainer)
+    resetForm();
+})
